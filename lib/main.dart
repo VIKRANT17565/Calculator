@@ -75,8 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
         exp = '';
         break;
       case 'C':
-        displayOnScreen = displayText.substring(0, displayText.length - 1);
-        exp = displayText.substring(0, displayText.length - 1);
+        if (displayOnScreen != '' && exp != '') {
+          displayOnScreen = displayText.substring(0, displayText.length - 1);
+          exp = displayText.substring(0, displayText.length - 1);
+        }
         break;
       case 'x':
         displayOnScreen += 'x';
@@ -125,11 +127,10 @@ class _MyHomePageState extends State<MyHomePage> {
     final double topH = MediaQuery.of(context).padding.top;
     final double bottomH = MediaQuery.of(context).padding.bottom;
 
-    final deviceSizeHeight = MediaQuery.of(context).size.height - topH - bottomH;
+    final deviceSizeHeight =
+        MediaQuery.of(context).size.height - topH - bottomH;
     final deviceSizeWidth = MediaQuery.of(context).size.width;
 
-    print(deviceSizeHeight);
-    print(deviceSizeWidth);
 
     return Scaffold(
       appBar: AppBar(
@@ -151,10 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
 
             //
-            Container(
-              height: 1,
-              color: Theme.of(context).dividerColor
-            ),
+            Container(height: 1, color: Theme.of(context).dividerColor),
 
             Container(
               // decoration: BoxDecoration(
@@ -168,7 +166,8 @@ class _MyHomePageState extends State<MyHomePage> {
               height: deviceSizeHeight * 0.55,
               child: GridView.count(
                 // childAspectRatio: deviceSizeHeight*0.55 > deviceSizeWidth ? deviceSizeHeight*0.55 / deviceSizeWidth : deviceSizeWidth / deviceSizeHeight*0.55,
-                childAspectRatio:  deviceSizeWidth / (deviceSizeHeight*0.55 - deviceSizeHeight*0.55*0.25),
+                childAspectRatio: deviceSizeWidth /
+                    (deviceSizeHeight * 0.55 - deviceSizeHeight * 0.55 * 0.25),
                 crossAxisCount: 4,
                 // mainAxisSpacing: 18,
                 // crossAxisSpacing: 18,
