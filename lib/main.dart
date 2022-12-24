@@ -2,9 +2,19 @@ import 'package:calculator/widgets/display.dart';
 import 'package:calculator/widgets/keys.dart';
 import 'package:dart_eval/dart_eval.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  ).then((value) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -92,21 +102,27 @@ class _MyHomePageState extends State<MyHomePage> {
       case '=':
         // displayOnScreen = (eval(displayText) as int).toString();
         // print(eval(exp).round());
+        // print(exp);
         if (exp == '') {
           return;
         }
 
         try {
-          eval(exp).toString();
-          if (eval(exp) == eval(exp).round()) {
-            displayOnScreen = eval(exp).round().toString();
+          Parser p = Parser();
+          Expression expr = p.parse(exp);
+          ContextModel cm = ContextModel();
+          double eval = expr.evaluate(EvaluationType.REAL, cm);
+          if (eval.round() == eval) {
+            displayOnScreen = eval.round().toString();
           } else {
-            displayOnScreen = eval(exp).toString();
+            displayOnScreen = eval.toString();
           }
         } catch (e) {
           displayOnScreen = 'Error';
-          exp = displayOnScreen;
+          print(e);
         }
+
+        exp = displayOnScreen;
         break;
 
       default:
@@ -130,7 +146,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final deviceSizeHeight =
         MediaQuery.of(context).size.height - topH - bottomH;
     final deviceSizeWidth = MediaQuery.of(context).size.width;
-
 
     return Scaffold(
       appBar: AppBar(
